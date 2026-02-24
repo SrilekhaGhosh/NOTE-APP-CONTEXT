@@ -1,4 +1,4 @@
-import axios from "axios"
+import { api, resolveApiUrl } from "../../api/apiClient"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
@@ -10,7 +10,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:8001/user/login", {
+      const res = await api.post("/user/login", {
         email,
         password,
       })
@@ -26,7 +26,7 @@ const Login = () => {
       if (res.data.user.profileImage) {
         localStorage.setItem(
           "profileImage",
-          `http://localhost:8001${res.data.user.profileImage}`
+          resolveApiUrl(res.data.user.profileImage)
         )
       } else {
         localStorage.removeItem("profileImage")

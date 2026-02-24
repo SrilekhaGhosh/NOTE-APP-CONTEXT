@@ -1,10 +1,7 @@
 
-
-
-
-
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { api, resolveApiUrl } from "../api/apiClient"
 
 const Header = () => {
   const navigate = useNavigate()
@@ -35,20 +32,13 @@ const Header = () => {
       formData.append("userName", userName)
       if (profileImage) formData.append("profileImage", profileImage)
 
-      const token = localStorage.getItem("accessToken")
-      const res = await fetch("http://localhost:8001/user/update-profile", {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData
-      })
-
-      const data = await res.json()
+      const { data } = await api.put("/user/update-profile", formData)
 
       if (data.status) {
         localStorage.setItem("userName", data.user.userName)
 
         if (data.user.profileImage) {
-          const imgUrl = `http://localhost:8001${data.user.profileImage}`
+          const imgUrl = resolveApiUrl(data.user.profileImage)
           localStorage.setItem("profileImage", imgUrl)
           setUserProfileImage(imgUrl)
         }
@@ -60,7 +50,7 @@ const Header = () => {
       }
     } catch (err) {
       console.error(err)
-      alert("Error updating profile")
+      alert(err.response?.data?.message || "Error updating profile")
     }
   }
 

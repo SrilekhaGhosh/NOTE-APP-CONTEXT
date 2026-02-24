@@ -1,86 +1,6 @@
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import axios from "axios";
-// import "./SignUp.css";
-// import toast from "react-hot-toast";
-
-// const Signup = () => {
-//   const navigate = useNavigate();
-//   const [userName, setUserName] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-
-//   const handleSignup = async () => {
-//     try {
-//       await axios.post("http://localhost:7001/user/register", {
-//         userName,
-//         email,
-//         password,
-//       });
-
-    
-//     toast.success("Signup successful, please verify your email");
-//     //   toast.success(res.data.message)
-//       navigate("/login");
-//     } catch (err) {
-//       toast.error(err.response?.data?.message || "Signup failed");
-//     }
-//   };
-
-//   return (
-//     <div className="signup-container">
-//       <div className="signup-card">
-//         <h2>Sign Up</h2>
-
-//         <input
-//           type="text"
-//           placeholder="User Name"
-//           value={userName}
-//           onChange={(e) => setUserName(e.target.value)}
-//           className="input-field"
-//         />
-
-//         <input
-//           type="email"
-//           placeholder="Email"
-//           value={email}
-//           onChange={(e) => setEmail(e.target.value)}
-//           className="input-field"
-//         />
-
-//         <input
-//           type="password"
-//           placeholder="Password"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//           className="input-field"
-//         />
-
-//         <button onClick={handleSignup} className="signup-btn">
-//           Sign Up
-//         </button>
-
-//         <p className="login-text">
-//           Already have an account?{" "}
-//           <span
-//             className="login-link"
-//             onClick={() => navigate("/login")}
-//           >
-//             Login
-//           </span>
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Signup;
-
-
-
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import axios from "axios"
+import { api } from "../../api/apiClient"
 import toast from "react-hot-toast"
 
 const Signup = () => {
@@ -91,7 +11,7 @@ const Signup = () => {
 
   const handleSignup = async () => {
     try {
-      await axios.post("http://localhost:8001/user/register", {
+      await api.post("/user/register", {
         userName,
         email,
         password,

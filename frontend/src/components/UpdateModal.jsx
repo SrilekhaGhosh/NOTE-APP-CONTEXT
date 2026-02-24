@@ -1,21 +1,21 @@
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
-import toast from 'react-hot-toast'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTodo } from './context/TodoContext'
+import Header from './Header'
+import Footer from './Footer'
 
 const UpdateModal = () => {
-  const { register, handleSubmit, setValue } = useForm()
+  const { register, handleSubmit, setValue, formState: { isSubmitting } } = useForm()
   const { id } = useParams()
   const navigate = useNavigate()
   const { updateTodo, getTodo } = useTodo()
 
-  const handleCancel = () => navigate("/Home")
+  const handleCancel = () => navigate("/home")
 
-  const onSubmit = (data) => {
-    updateTodo(data, id)
-    navigate("/Home")
+  const onSubmit = async (data) => {
+    await updateTodo(data, id)
+    navigate("/home")
   }
 
   useEffect(() => {
@@ -23,54 +23,79 @@ const UpdateModal = () => {
       getTodo(id, setValue)
     }
 
-  }, [id])
+  }, [id, getTodo, setValue])
 
   return (
-    <div className="min-h-screen flex justify-center mt-10">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg">
-        <div className="bg-white shadow-xl rounded-xl p-6 border">
+    <div className="min-h-screen bg-slate-50">
+      <Header />
 
-
-          <h2 className="text-center text-xl font-semibold mb-4 flex justify-center items-center gap-2">
-            ✏️ Update Note
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-blue-600 to-indigo-700">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+          <p className="text-white/80 text-sm font-medium">Edit note</p>
+          <h2 className="text-white text-3xl sm:text-4xl font-bold tracking-tight">
+            Update your note
           </h2>
-
-
-          <input
-            type="text"
-            placeholder="Title"
-            {...register("title")}
-            className="w-full mb-4 rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-
-
-          <textarea
-            rows="4"
-            placeholder="Description"
-            {...register("description")}
-            className="w-full mb-6 rounded-md border border-gray-300 px-4 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-
-
-          <div className="flex gap-4">
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
-            >
-              Update Note
-            </button>
-
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="w-full bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition"
-            >
-              Cancel
-            </button>
-          </div>
-
+          <p className="text-white/80 mt-2 max-w-2xl">
+            Make changes to your title and description, then save.
+          </p>
         </div>
-      </form>
+      </section>
+
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-2xl">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="bg-white shadow-lg rounded-2xl p-6 border border-slate-200">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-slate-900">✏️ Update Note</h3>
+                <span className="text-xs text-slate-500">Keep it clear</span>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Title</label>
+                  <input
+                    type="text"
+                    placeholder="Title"
+                    {...register("title")}
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
+                  <textarea
+                    rows="6"
+                    placeholder="Description"
+                    {...register("description")}
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 resize-none outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-70"
+                >
+                  {isSubmitting ? "Updating..." : "Update Note"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="w-full bg-slate-100 text-slate-800 py-2.5 rounded-lg font-semibold hover:bg-slate-200 transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </main>
+
+      <Footer />
     </div>
   )
 }

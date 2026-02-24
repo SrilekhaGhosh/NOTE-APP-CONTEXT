@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename)
 
 const app = express()
 
-const port = process.env.PORT || 8001
+const port = process.env.PORT || 7001
 
 app.use(express.json())
 app.use(cors());

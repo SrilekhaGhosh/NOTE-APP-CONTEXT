@@ -2,9 +2,9 @@ import React from 'react'
 
 const Footer = () => {
     return (
-        <div className='text-3xl '>
-            @NOTE2026
-        </div>
+        <footer className="mt-10 py-8 text-center text-sm text-slate-500">
+            © {new Date().getFullYear()} Notes App
+        </footer>
     )
 }
 

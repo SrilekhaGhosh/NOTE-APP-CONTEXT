@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import axios from "axios";
+import { api } from "../../api/apiClient";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -14,17 +14,7 @@ export const TodoProvider = ({ children }) => {
 
   const getAll = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
-      console.log("Using token in home:", accessToken);
-
-      const res = await axios.get(
-        "http://localhost:8001/todo/getAll",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const res = await api.get("/todo/getAll");
 
       console.log("Fetched todos:", res);
       setTodos(res.data.todoData || res.data);
@@ -40,18 +30,8 @@ export const TodoProvider = ({ children }) => {
       description,
     };
 
-    const accessToken = localStorage.getItem("accessToken");
-
     try {
-      const res = await axios.post(
-        "http://localhost:8001/todo/create",
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const res = await api.post("/todo/create", data);
 
       console.log(res);
     
@@ -62,25 +42,15 @@ export const TodoProvider = ({ children }) => {
       setFlag((prev) => !prev);
     } catch (error) {
       console.log("Data Not Created", error);
-  
-      toast.error(error.response.data.errors[0])
+
+      toast.error(error.response?.data?.errors?.[0] || "Failed to create note")
 
 
     }
   };
   const deleteTodo = async (todoId) => {
     try {
-
-      const token = localStorage.getItem("accessToken");
-
-      const res = await axios.delete(
-        `http://localhost:8001/todo/delete/${todoId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      const res = await api.delete(`/todo/delete/${todoId}`);
 
       console.log(res);
       getAll();
@@ -97,15 +67,7 @@ export const TodoProvider = ({ children }) => {
 
   const getTodo = async (id, setValue) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const res = await axios.get(
-        `http://localhost:8001/todo/getById/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      const res = await api.get(`/todo/getById/${id}`)
 
       console.log("Fetched todo:", res.data)
       const { title, description } = res.data.data
@@ -121,16 +83,7 @@ export const TodoProvider = ({ children }) => {
 
   const updateTodo = async (data, id) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      await axios.put(
-        `http://localhost:8001/todo/update/${id}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      await api.put(`/todo/update/${id}`, data)
 
       toast.success("Note updated successfully")
       getAll()
