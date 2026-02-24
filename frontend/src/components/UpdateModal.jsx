@@ -18,12 +18,13 @@ const UpdateModal = () => {
     navigate("/home")
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (id) {
       getTodo(id, setValue)
     }
 
-  }, [id, getTodo, setValue])
+  }, [id])
 
   return (
     <div className="min-h-screen bg-slate-50">

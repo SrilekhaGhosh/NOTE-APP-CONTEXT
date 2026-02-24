@@ -27,7 +27,11 @@ const VerifyMail = () => {
         setTimeout(() => navigate("/login"), 2000);
       } catch (error) {
         // Show error if token is invalid or expired
-        toast.error("Invalid or expired verification link", error.message);
+        toast.error(
+          error?.message
+            ? `Invalid or expired verification link: ${error.message}`
+            : "Invalid or expired verification link"
+        );
         setStatus("Verification failed. Please try again.");
       }
     };
